@@ -6,7 +6,8 @@ import (
 )
 
 func GetConnection() *sql.DB {
-	db, err := sql.Open("mysql", "root:@/learn-golang-database")
+	// parseTime = true -> mengubah tipe data dari database ke format time.Time milik golang
+	db, err := sql.Open("mysql", "root:@/learn-golang-database?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
