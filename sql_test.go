@@ -107,10 +107,12 @@ func TestQueryInjection(t *testing.T){
 	ctx := context.Background()
 
 	// anggap kode dibawah ini ialah input form dari user
-	username := "admin"
-	password := "admin"
+	username := "admin'; #"
+	password := "salah"
 
 	scriptSql := "SELECT username FROM user WHERE username='" + username + "' AND password='" + password + "' LIMIT 1"
+	fmt.Println(scriptSql);
+
 	// gunakan perintah Query/QueryContext untuk perintah Sql yang membutuhkan hasil / return
 	rows, err := db.QueryContext(ctx, scriptSql)
 	if err != nil {
