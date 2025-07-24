@@ -184,3 +184,27 @@ func TestExecSqlParameter(t *testing.T){
 
 	fmt.Println("Success create user");
 }
+
+func TestAutoIncrement(t *testing.T){
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+
+	// anggap kode dibawah ini ialah input form dari user
+	email := "juna@gmail.com"
+	comment := "Test komen"
+
+	scriptSql := "INSERT INTO comments(email, comment) VALUES(?, ?)" 
+	result, err := db.ExecContext(ctx, scriptSql, email, comment)
+	if err != nil {
+		panic(err)
+	}
+
+	insertId, err := result.LastInsertId()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Success create comment with id:", insertId);
+}
