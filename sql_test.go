@@ -99,3 +99,33 @@ func TestQuerySqlComplex(t *testing.T){
 		fmt.Println("======================");
 	}
 }
+
+func TestQueryInjection(t *testing.T){
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+
+	// anggap kode dibawah ini ialah input form dari user
+	username := "admin"
+	password := "admin"
+
+	scriptSql := "SELECT username FROM user WHERE username='" + username + "' AND password='" + password + "' LIMIT 1"
+	// gunakan perintah Query/QueryContext untuk perintah Sql yang membutuhkan hasil / return
+	rows, err := db.QueryContext(ctx, scriptSql)
+	if err != nil {
+		panic(err)
+	}
+
+	if rows.Next(){
+		// jika berhasil / me-return data
+		var username string
+		err := rows.Scan(&username)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Berhasil login sebagai", username)
+	} else {
+		fmt.Println("Gagal login");
+	}
+}
