@@ -12,6 +12,11 @@ type CommentRepositoryImpl struct {
 	DB *sql.DB
 }
 
+// CONSTRUCTOR
+func NewCommentRepository(db *sql.DB) CommentRepository {
+	return &CommentRepositoryImpl{DB: db}
+}
+
 
 // INTERFACE
 func (repository *CommentRepositoryImpl) Insert(ctx context.Context, comment entity.Comment) (entity.Comment, error) {
