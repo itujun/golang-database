@@ -131,3 +131,56 @@ func TestQueryInjection(t *testing.T){
 		fmt.Println("Gagal login");
 	}
 }
+
+func TestQueryInjectionWithParameter(t *testing.T){
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+
+	// anggap kode dibawah ini ialah input form dari user
+	username := "admin"
+	password := "admin"
+
+	scriptSql := "SELECT username FROM user WHERE username= ? AND password= ? LIMIT 1"
+	fmt.Println(scriptSql);
+
+	// gunakan perintah Query/QueryContext untuk perintah Sql yang membutuhkan hasil / return
+	rows, err := db.QueryContext(ctx, scriptSql, username, password)
+	if err != nil {
+		panic(err)
+	}
+
+	if rows.Next(){
+		// jika berhasil / me-return data
+		var username string
+		err := rows.Scan(&username)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Berhasil login sebagai", username)
+	} else {
+		fmt.Println("Gagal login");
+	}
+}
+
+func TestExecSqlParameter(t *testing.T){
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+
+	// anggap kode dibawah ini ialah input form dari user
+	username := "juna"
+	password := "juna"
+
+	scriptSql := "INSERT INTO user (username, password) VALUES(?, ?)" 
+	fmt.Println(scriptSql);
+
+	_, err := db.ExecContext(ctx, scriptSql, username, password)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Success create user");
+}
